@@ -6,7 +6,7 @@ import LoginApp from '../views/LoginApp.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  {path: '/',name: 'home',component: LoginApp},
+  {path: '/',name: 'login',component: LoginApp},
   {path: '/about',name: 'about'}
 ]
 
