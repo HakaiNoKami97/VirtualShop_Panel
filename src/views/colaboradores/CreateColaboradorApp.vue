@@ -32,12 +32,10 @@
                       <!-- Nav -->
                       <ul class="nav nav-tabs nav-overflow header-tabs">
                         <li class="nav-item">
-                          <a href="account-general.html" class="nav-link active">
-                            Todos los colaboradores
-                          </a>
+                          <RouterLink class="nav-link">Todos los colaboradores</RouterLink>
                         </li>
                         <li class="nav-item">
-                          <a href="account-billing.html" class="nav-link">
+                          <a class="nav-link active">
                               Nuevo colaborador
                           </a>
                           
@@ -207,6 +205,22 @@
           }
         }).then((result)=>{
           console.log(result);
+          if(result.data.data == undefined){
+            this.$notify({
+              group: 'foo',
+              title: 'ERROR',
+              text: result.data.message,
+              type: 'error'
+            });
+          }else{
+            this.$notify({
+              group: 'foo',
+              title: 'SUCCESS',
+              text: 'Se registro el nuevo colaborador',
+              type: 'success'
+            });
+            this.$router.push({name: 'colaborador-index'});
+          }
         }).catch((error)=>{
           console.log(error);
         });
