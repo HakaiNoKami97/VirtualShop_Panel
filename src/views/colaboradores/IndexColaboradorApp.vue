@@ -104,122 +104,89 @@
 
                                     </tr>
                                   </thead>
-                                  <tbody class="list fs-base">
-                                    <tr v-for="item in colaboradores">
-                                    
-                                      <td>
+                                  <paginate
+                                      tag="tbody"
+                                      ref="colaboradores"
+                                      name="colaboradores"
+                                      :list="colaboradores"
+                                      :per="perPage"
+                                      class="list fs-base"
+                                    >
+                                      <tr v-for="item in paginated('colaboradores')">
+                                        <td>
 
-                                        <!-- Avatar -->
-                                        <div class="avatar avatar-xs align-middle me-2">
-                                          <img class="avatar-img rounded-circle" src="/assets/img/avatar-1.jpg" alt="...">
-                                        </div> <a class="item-name text-reset">{{item.nombres}} {{item.apellidos}}</a>
+                                          <!-- Avatar -->
+                                          <div class="avatar avatar-xs align-middle me-2">
+                                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-1.jpg" alt="...">
+                                          </div> <a class="item-name text-reset">{{item.nombres}} {{item.apellidos}}</a>
 
-                                      </td>
-                                      <td>
+                                        </td>
+                                        <td>
 
-                                        <!-- Text -->
-                                        <span class="item-title">{{item.rol}}</span>
+                                          <!-- Text -->
+                                          <span class="item-title">{{item.rol}}</span>
 
-                                      </td>
-                                      <td>
+                                        </td>
+                                        <td>
 
-                                        <!-- Email -->
-                                        <a class="item-email text-reset">{{item.email}}</a>
+                                          <!-- Email -->
+                                          <a class="item-email text-reset">{{item.email}}</a>
 
-                                      </td>
-                                   
-                                      <td>
+                                        </td>
+                                        <td>
 
-                                        <!-- Badge -->
-                                        <span v-if="!item.estado" class="item-score badge bg-danger-soft">Desactivado</span>
-                                        <span v-if="item.estado" class="item-score badge bg-success-soft">Activo</span>
-                                      </td>
-                                    
-                                      <td class="text-end">
+                                          <!-- Badge -->
+                                          <span v-if="!item.estado" class="item-score badge bg-danger-soft">Desactivado</span>
+                                          <span v-if="item.estado" class="item-score badge bg-success-soft">Activo</span>
+                                        </td>
+                                        <td class="text-end">
 
-                                        <!-- Dropdown -->
-                                        <div class="dropdown">
-                                          <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fe fe-more-vertical"></i>
-                                          </a>
-                                          <div class="dropdown-menu dropdown-menu-end">
-                                            <a href="#!" class="dropdown-item">
-                                              Action
+                                          <!-- Dropdown -->
+                                          <div class="dropdown">
+                                            <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                              <i class="fe fe-more-vertical"></i>
                                             </a>
-                                            <a href="#!" class="dropdown-item">
-                                              Another action
-                                            </a>
-                                            <a href="#!" class="dropdown-item">
-                                              Something else here
-                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                              <a href="#!" class="dropdown-item">
+                                                Action
+                                              </a>
+                                              <a href="#!" class="dropdown-item">
+                                                Another action
+                                              </a>
+                                              <a href="#!" class="dropdown-item">
+                                                Something else here
+                                              </a>
+                                            </div>
                                           </div>
-                                        </div>
 
-                                      </td>
-                                    </tr>
-                                  
-                                    
-                                  </tbody>
+                                        </td>
+                                      </tr>
+                                    </paginate>
                                 </table>
                               </div>
                               <div class="card-footer d-flex justify-content-between">
 
-                                <!-- Pagination (prev) -->
+                                            <!-- Pagination (prev) -->
                                 <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
                                   <li class="page-item">
-                                    <a class="page-link ps-0 pe-4 border-end" href="#">
+                                    <a class="page-link ps-0 pe-4 border-end" v-on:click="goPrev()">
                                       <i class="fe fe-arrow-left me-1"></i> Prev
                                     </a>
                                   </li>
                                 </ul>
 
                                 <!-- Pagination -->
-                                <ul class="list-pagination pagination pagination-tabs card-pagination"></ul>
-
+                           
+                                <paginate-links @change="onLangsPageChange" for="colaboradores" :classes="{'ul': ['list-pagination','pagination','pagination-tabs','card-pagination'],'a': ['page']}"></paginate-links>
+  
                                 <!-- Pagination (next) -->
                                 <ul class="list-pagination-next pagination pagination-tabs card-pagination">
                                   <li class="page-item">
-                                    <a class="page-link ps-4 pe-0 border-start" href="#">
+                                    <a class="page-link ps-4 pe-0 border-start"  v-on:click="goNext()">
                                       Next <i class="fe fe-arrow-right ms-1"></i>
                                     </a>
                                   </li>
                                 </ul>
-
-                                <!-- Alert -->
-                                <div class="list-alert alert alert-dark alert-dismissible border fade" role="alert">
-
-                                  <!-- Content -->
-                                  <div class="row align-items-center">
-                                    <div class="col">
-
-                                      <!-- Checkbox -->
-                                      <div class="form-check">
-                                        <input class="form-check-input" id="listAlertCheckbox" type="checkbox" checked disabled>
-                                        <label class="form-check-label text-white" for="listAlertCheckbox">
-                                          <span class="list-alert-count">0</span> deal(s)
-                                        </label>
-                                      </div>
-
-                                    </div>
-                                    <div class="col-auto me-n3">
-
-                                      <!-- Button -->
-                                      <button class="btn btn-sm btn-white-20">
-                                        Edit
-                                      </button>
-
-                                      <!-- Button -->
-                                      <button class="btn btn-sm btn-white-20">
-                                        Delete
-                                      </button>
-
-                                    </div>
-                                  </div> <!-- / .row -->
-
-                                  <!-- Close -->
-                                  <button type="button" class="list-alert-close btn-close" aria-label="Close"></button>
-
-                                </div>
 
                               </div>
                             </div>
@@ -249,12 +216,38 @@ export default {
   data() {
     return {
       colaboradores : [],
+      paginate: ['colaboradores'],
+      currentPage: 1,
+      perPage: 2,
     }
   },
   
   components: {
       Sidebar,
       TopNav
+  },
+
+  methods: {
+    onLangsPageChange (toPage, fromPage) {
+      // handle here…
+      this.currentPage = toPage;
+       console.log(this.currentPage);
+    },
+    goPrev(){
+      console.log(this.currentPage);
+      if(this.currentPage >= 2){
+        this.$refs.colaboradores.goToPage(this.currentPage--);
+      }else{
+        this.$refs.colaboradores.goToPage(1);
+      }
+    },
+    goNext(){
+      if(this.currentPage <= Math.ceil(this.colaboradores.length/this.perPage)){
+        this.$refs.colaboradores.goToPage(this.currentPage++);
+      }else{
+        this.$refs.colaboradores.goToPage(Math.ceil(this.colaboradores.length/this.perPage));
+      }
+    }
   },
 
   beforeMount() {
