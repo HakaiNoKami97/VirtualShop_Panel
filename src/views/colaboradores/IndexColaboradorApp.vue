@@ -104,7 +104,7 @@
 
                                     </tr>
                                   </thead>
-                                  <paginate
+                                  <paginate v-if="!load_data"
                                       tag="tbody"
                                       ref="colaboradores"
                                       name="colaboradores"
@@ -162,6 +162,13 @@
                                         </td>
                                       </tr>
                                     </paginate>
+                                    <tr v-if="load_data">
+                                      <td colspan="5" class="text-center">
+                                        <div class="spinner-border mt-5 mb-5" role="status">
+                                          <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                      </td>
+                                    </tr>
                                 </table>
                               </div>
                               <div class="card-footer d-flex justify-content-between">
@@ -221,7 +228,8 @@ export default {
       paginate: ['colaboradores'],
       currentPage: 1,
       perPage: 15,
-      filtro: ''
+      filtro: '',
+      load_data : false,
     }
   },
   
@@ -258,6 +266,7 @@ export default {
       this.init_data();
     },
     init_data(){
+      this.load_data = true;
       axios.get(this.$url+'/listar_usuario_admin/'+this.filtro,{
         headers:{
           'Content-Type': 'application/json',
@@ -266,6 +275,7 @@ export default {
       }).then((result)=>{
         this.colaboradores = result.data;
         this.colaboradores_const = this.colaboradores;
+        this.load_data = false;
         console.log(this.colaboradores);
       }).catch((error)=>{
         console.log(error);
