@@ -62,7 +62,7 @@
                                     <!-- Form -->
                                     <form>
                                       <div class="input-group input-group-flush input-group-merge input-group-reverse">
-                                        <input class="form-control list-search" type="search" placeholder="Search">
+                                        <input class="form-control list-search" type="search" v-model="filtro" placeholder="Buscar colaborador">
                                         <span class="input-group-text">
                                           <i class="fe fe-search"></i>
                                         </span>
@@ -74,7 +74,7 @@
                                   <div class="col-auto">
 
                                     <!-- Dropdown -->
-                                    <button class="btn btn-sm btn-white" type="button">
+                                    <button class="btn btn-sm btn-white" type="button" v-on:click="filtrar()">
                                       <i class="fe fe-sliders me-1"></i> Filter <span class="badge bg-primary ms-1 d-none">0</span>
                                     </button>
 
@@ -188,6 +188,7 @@
                                   </li>
                                 </ul>
 
+
                               </div>
                             </div>
 
@@ -216,9 +217,11 @@ export default {
   data() {
     return {
       colaboradores : [],
+      colaboradores_const: [],
       paginate: ['colaboradores'],
       currentPage: 1,
-      perPage: 2,
+      perPage: 15,
+      filtro: ''
     }
   },
   
@@ -246,22 +249,32 @@ export default {
         this.$refs.colaboradores.goToPage(this.currentPage++);
       }else{
         this.$refs.colaboradores.goToPage(Math.ceil(this.colaboradores.length/this.perPage));
-      }
+      };
+    },
+    filtrar(){
+      console.log(this.filtro);
+      let term = new RegExp(this.filtro,'i');
+      /* this.colaboradores = this.colaboradores_const.filter(item=>term.test(item.nombres)||term.test(item.apellidos)||term.test(item.email)); */
+      this.init_data();
+    },
+    init_data(){
+      axios.get(this.$url+'/listar_usuario_admin/'+this.filtro,{
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': this.$token
+        }
+      }).then((result)=>{
+        this.colaboradores = result.data;
+        this.colaboradores_const = this.colaboradores;
+        console.log(this.colaboradores);
+      }).catch((error)=>{
+        console.log(error);
+      });
     }
   },
 
   beforeMount() {
-    axios.get(this.$url+'/listar_usuario_admin',{
-      headers:{
-        'Content-Type': 'application/json',
-        'Authorization': this.$token
-      }
-    }).then((result)=>{
-      this.colaboradores = result.data;
-      console.log(this.colaboradores);
-    }).catch((error)=>{
-      console.log(error);
-    });
+    this.init_data();
   },
 }
 </script>
