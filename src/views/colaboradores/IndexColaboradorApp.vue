@@ -50,6 +50,8 @@
                             </div>
                         </div>
 
+                        
+
                         <div class="tab-content">
                           <div class="tab-pane fade show active" id="contactsListPane" role="tabpanel" aria-labelledby="contactsListTab">
 
@@ -104,7 +106,7 @@
 
                                     </tr>
                                   </thead>
-                                  <paginate 
+                                  <paginate
                                       tag="tbody"
                                       ref="colaboradores"
                                       name="colaboradores"
@@ -147,10 +149,16 @@
                                               <i class="fe fe-more-vertical"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end">
-                                              <router-link :to="{name='colaborador-edit',params: {id: item._id}}" class="dropdown-item">Editar</router-link>
+                                              <router-link :to="{name:'colaborador-edit',params: {id: item._id}}" class="dropdown-item">Editar</router-link>
+                                              <a style="cursor:pointer" class="dropdown-item" v-b-modal="'delete-'+item._id">Desactivar</a>
                                             </div>
+  
+
                                           </div>
 
+                                          <b-modal centered :id="'delete-'+item._id" title="BootstrapVue" title-html="<h4 class='card-header-title'><b>Add a member</b></h4>">
+                                            <p class="my-4">{{item._id}}</p>
+                                          </b-modal>
                                         </td>
                                       </tr>
                                     </paginate>
@@ -200,6 +208,7 @@
             </div>
 
         </div>
+        
     </div>
 </template>
 
@@ -249,7 +258,7 @@ export default {
         this.$refs.colaboradores.goToPage(this.currentPage++);
       }else{
         this.$refs.colaboradores.goToPage(Math.ceil(this.colaboradores.length/this.perPage));
-      };
+      }
     },
     filtrar(){
       console.log(this.filtro);
@@ -267,7 +276,7 @@ export default {
       }).then((result)=>{
         this.colaboradores = result.data;
         this.colaboradores_const = this.colaboradores;
-        this.load_data = false;
+         this.load_data = false;
         console.log(this.colaboradores);
       }).catch((error)=>{
         console.log(error);
