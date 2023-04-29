@@ -130,7 +130,7 @@
                             </div> <!-- / .row -->
                             <hr class="my-5">
                             <button type="button" class="btn btn-primary" v-on:click="validar()">
-                                Crear colaborador
+                                Guardar cambios
                             </button>
                         </div>
                     </template>
@@ -224,39 +224,29 @@ export default {
                     type: 'error'
                 });
             }else{
-               /*  this.crear_colaborador(); */
+                this.actualizar_colaborador();
             }
         },
 
-        /* crear_colaborador(){
-            axios.post(this.$url+'/registro_usuario_admin',this.colaborador,{
+        actualizar_colaborador(){
+            axios.put(this.$url+'/actualizar_usuario_admin/'+this.id,this.colaborador,{
                 headers: {
                      'Content-Type': 'application/json',
                      'Authorization' : this.$token
                 }
             }).then((result)=>{
-                console.log(result);
-                if(result.data.data == undefined){
-                    this.$notify({
-                        group: 'foo',
-                        title: 'ERROR',
-                        text: result.data.message,
-                        type: 'error'
-                    });
-                }else{
-                    this.$notify({
-                        group: 'foo',
-                        title: 'SUCCESS',
-                        text: 'Se registro el nuevo colaborador',
-                        type: 'success'
-                    });
+                this.$notify({
+                    group: 'foo',
+                    title: 'SUCCESS',
+                    text: 'Se actualizó el colaborador',
+                    type: 'success'
+                });
 
-                    this.$router.push({name: 'colaborador-index'});
-                }
+                this.$router.push({name: 'colaborador-index'});
             }).catch((error)=>{
                 console.log(error);
             });
-        } */
+        }
     },
     
     mounted() {
