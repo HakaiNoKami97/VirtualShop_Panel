@@ -18,6 +18,7 @@ const routes = [
   {path: '/colaborador/edit/:id',name: 'colaborador-edit',component: ()=> import('@/views/colaboradores/EditColaboradorApp.vue'),meta: { requiresAuth: true }},
   {path: '/dashboard',name: 'dashboard',component: ()=> import('@/views/DashboardApp.vue'),meta: { requiresAuth: true }},
 /*   {path: '/about', name: 'about'}, */
+{path: '/producto/create',name: 'producto-create',component: ()=> import('@/views/productos/CreateProductoApp.vue'), meta: { requiresAuth: true }},
 ]
 
 const router = new VueRouter({
