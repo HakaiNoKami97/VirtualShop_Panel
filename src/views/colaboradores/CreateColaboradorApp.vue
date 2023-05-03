@@ -32,15 +32,13 @@
                       <!-- Nav -->
                       <ul class="nav nav-tabs nav-overflow header-tabs">
                         <li class="nav-item">
-                          <RouterLink class="nav-link">Todos los colaboradores</RouterLink>
+                          <router-link to="/colaborador" class="nav-link">Todos los colaboradores</router-link>                          
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item">                      
                           <a class="nav-link active">
-                              Nuevo colaborador
+                                Nuevo colaborador
                           </a>
-                          
-                        </li>
-                        
+                        </li>                          
                       </ul>
 
                     </div>
