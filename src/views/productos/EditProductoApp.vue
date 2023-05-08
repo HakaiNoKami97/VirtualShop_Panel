@@ -145,7 +145,7 @@
                                       </label>
   
                                       <!-- Input -->
-                                      <input type="number" class="form-control" placeholder="Precio" v-model="producto.precio">
+                                      <input type="number" readonly class="form-control" placeholder="Precio" v-model="producto.precio">
   
                                   </div>
   
@@ -323,11 +323,12 @@
                       this.producto.portada = this.portada;
                  }else{
                      this.$notify({
-                      group: 'foo',
-                      title: 'ERROR',
-                      text: 'El recurso debe ser imagen.',
-                      type: 'error'
-                  });
+                          group: 'foo',
+                          title: 'ERROR',
+                          text: 'El recurso debe ser imagen.',
+                          type: 'error'
+                      });
+                      this.portada = undefined;
                  }
               }else{
                   this.$notify({
@@ -336,6 +337,7 @@
                       text: 'La imagen debe pesar menos de 1MB',
                       type: 'error'
                   });
+                  this.portada = undefined;
               }
             
         },
@@ -354,13 +356,6 @@
                       text: 'Seleccione la categoria del producto',
                       type: 'error'
                   });
-              }else if(!this.producto.precio){
-                  this.$notify({
-                      group: 'foo',
-                      title: 'ERROR',
-                      text: 'Ingrese el precio del producto',
-                      type: 'error'
-                  });
               }else if(!this.producto.extracto){
                   this.$notify({
                       group: 'foo',
@@ -376,29 +371,52 @@
                       type: 'error'
                   });
               }else{
-                  this.registro();
+                  this.actualizar();
               }
             
         },
   
-        registro(){
-            /* var fm = new FormData();
-            fm.append('titulo',this.producto.titulo);
-            fm.append('categoria',this.producto.categoria);
-            fm.append('precio',this.producto.precio);
-            fm.append('extracto',this.producto.extracto);
-            fm.append('estado',this.producto.estado);
-            fm.append('descuento',this.producto.descuento);
-            fm.append('portada',this.producto.portada); //IMAGEN
+        actualizar(){
+            var data;
+            var content = '';
+            if(this.portada != undefined){
+              content = 'multipart/form-data';
+              data = new FormData();
+              fm.append('titulo',this.producto.titulo);
+              fm.append('categoria',this.producto.categoria);
+              fm.append('extracto',this.producto.extracto);
+              fm.append('estado',this.producto.estado);
+              fm.append('descuento',this.producto.descuento);
+              fm.append('portada',this.producto.portada); //IMAGEN
+            }else{
+                content = 'application/json';
+                data = this.producto;
+            }
   
-            axios.post(this.$url+'/registro_producto_admin',fm,{
+            axios.put(this.$url+'/actualizar_producto_admin/'+this.$route.params.id,data,{
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': content,
                     'Authorization' : this.$store.state.token
                 }
             }).then((result)=>{
-              console.log(result);
-            }) */
+                
+                if(result.data.message){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: result.data.message,
+                      type: 'error'
+                  });
+                }else{
+                    this.$notify({
+                      group: 'foo',
+                      title: 'SUCCESS',
+                      text: 'Se actualizó el producto.',
+                      type: 'success'
+                  });
+                }
+                
+            })
   
   
         }
