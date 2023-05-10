@@ -92,7 +92,7 @@
                               <hr class="my-5">
   
                               <div class="row">
-                                  <div class="col-12">
+                                  <div class="col-12 col-md-6">
   
                                   <!-- Email address -->
                                   <div class="form-group">
@@ -123,6 +123,11 @@
                                       Categoria
                                       </label>
   
+                                       <!-- Form text -->
+                                      <small class="form-text text-muted">
+                                      This contact will be shown to others publicly, so choose it carefully.
+                                      </small>
+  
                                       <!-- Input -->
                                       <select name="" class="form-select" v-model="producto.categoria">
                                           <option value="" disabled selected>Seleccionar</option>
@@ -134,6 +139,24 @@
                                   </div>
   
                                   </div>
+  
+                                  <div class="col-12 col-md-6">
+  
+                                  <!-- Last name -->
+                                  <div class="form-group">
+  
+                                      <!-- Label -->
+                                      <label class="form-label">
+                                      Variedad
+                                      </label>
+  
+                                      <!-- Input -->
+                                      <input type="text" class="form-control" placeholder="Titulo de la variedad" v-model="producto.str_variedad">
+  
+                                  </div>
+  
+                                  </div>
+  
                                   <div class="col-12 col-md-6">
   
                                   <!-- Last name -->
@@ -249,13 +272,137 @@
                                   </div>
                               </div> <!-- / .row -->
   
+                              <!-- Button -->
+                              <button class="btn btn-primary mt-5" v-on:click="validar()">
+                                  Actualizar producto
+                              </button>
+  
                               <!-- Divider -->
                               <hr class="mt-4 mb-5">
   
-                              <!-- Button -->
-                              <button class="btn btn-primary" v-on:click="validar()">
-                                  Actualizar producto
-                              </button>
+                              
+  
+                              <div class="row justify-content-between align-items-center mb-5">
+                                  <div class="col-12">
+  
+                                      <!-- Heading -->
+                                      <h2 class="mb-2">
+                                          Variedades de producto
+                                      </h2>
+  
+                                      <!-- Text -->
+                                      <p class="text-muted mb-xl-0">
+                                      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsa dolore aspernatur, beatae id quod consequuntur.
+                                      </p>
+                                  </div>
+                                  
+                              </div>
+  
+                              <div class="row mb-5">
+                                  <div class="col-lg-5">
+                                      <small class="text-muted">
+                                          Proveedor
+                                      </small>
+                                      <input type="text" class="form-control" placeholder="Empresa proveedora">
+                                  </div>
+                                  <div class="col-lg-5">
+                                      <small class="text-muted">
+                                          Variedad
+                                      </small>
+                                      <input type="text" class="form-control" placeholder="Tallas, colores...">
+                                  </div>
+                                  <div class="col">
+                                          <small class="text-muted">
+                                          Acción*
+                                      </small> <br>
+                                      <button class="btn btn-primary btn-block" style="width: 100% !important;">Agregar</button>
+                                  </div>
+                              </div>
+  
+                              <div class="card">
+                                  <div class="card-body">
+  
+                                      <!-- List group -->
+                                      <div class="list-group list-group-flush my-n3">
+                                      <div class="list-group-item">
+                                          <div class="row align-items-center">
+                                          <div class="col">
+  
+                                              <!-- Heading -->
+                                              <h4 class="mb-1">
+                                              Authenticator app
+                                              </h4>
+  
+                                              <!-- Text -->
+                                              <small class="text-muted">
+                                              Google auth or 1Password
+                                              </small>
+  
+                                          </div>
+                                          <div class="col-auto">
+  
+                                              <!-- Button -->
+                                              <button class="btn btn-sm btn-white">
+                                              Setup
+                                              </button>
+  
+                                          </div>
+                                          </div> <!-- / .row -->
+                                      </div>
+                                      <div class="list-group-item">
+                                          <div class="row align-items-center">
+                                          <div class="col">
+  
+                                              <!-- Heading -->
+                                              <h4 class="mb-1">
+                                              SMS Recovery <i class="fe fe-info text-muted ms-1" data-bs-toggle="tooltip" data-title="We use the the phone number you provide in General" data-bs-original-title="" title=""></i>
+                                              </h4>
+  
+                                              <!-- Text -->
+                                              <small class="text-muted">
+                                              Standard messaging rates apply
+                                              </small>
+  
+                                          </div>
+                                          <div class="col-auto">
+  
+                                              <!-- Button -->
+                                              <button class="btn btn-sm btn-danger">
+                                              Disable
+                                              </button>
+  
+                                          </div>
+                                          </div> <!-- / .row -->
+                                      </div>
+                                      <div class="list-group-item">
+                                          <div class="row align-items-center">
+                                          <div class="col">
+  
+                                              <!-- Heading -->
+                                              <h4 class="mb-1">
+                                              Recovery codes <i class="fe fe-info text-muted ms-1" data-bs-toggle="tooltip" data-title="We use the the phone number you provide in General" data-bs-original-title="" title=""></i>
+                                              </h4>
+  
+                                              <!-- Text -->
+                                              <small class="text-muted">
+                                              Standard messaging rates apply
+                                              </small>
+  
+                                          </div>
+                                          <div class="col-auto">
+  
+                                              <!-- Button -->
+                                              <button class="btn btn-sm btn-white">
+                                              Reveal
+                                              </button>
+  
+                                          </div>
+                                          </div> <!-- / .row -->
+                                      </div>
+                                      </div>
+  
+                                  </div>
+                              </div>
   
   
                           </div>
@@ -363,6 +510,13 @@
                       text: 'Ingrese el extracto del producto',
                       type: 'error'
                   });
+              }else if(!this.producto.str_variedad){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: 'Ingrese el variedad del producto',
+                      type: 'error'
+                  });
               }else if(this.producto.portada == undefined){
                   this.$notify({
                       group: 'foo',
@@ -386,6 +540,7 @@
               fm.append('categoria',this.producto.categoria);
               fm.append('extracto',this.producto.extracto);
               fm.append('estado',this.producto.estado);
+              fm.append('str_variedad',this.producto.str_variedad);
               fm.append('descuento',this.producto.descuento);
               fm.append('portada',this.producto.portada); //IMAGEN
             }else{

@@ -89,7 +89,7 @@
                               <hr class="my-5">
   
                               <div class="row">
-                                  <div class="col-12">
+                                  <div class="col-12 col-md-6">
   
                                   <!-- Email address -->
                                   <div class="form-group">
@@ -131,6 +131,22 @@
                                   </div>
   
                                   </div>
+                                  <div class="col-12 col-md-6">
+  
+                                    <!-- Last name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                        Variedad
+                                        </label>
+
+                                        <!-- Input -->
+                                        <input type="text" class="form-control" placeholder="Titulo de la variedad" v-model="producto.str_variedad">
+
+                                    </div>
+
+                                    </div>
                                   <div class="col-12 col-md-6">
   
                                   <!-- Last name -->
@@ -354,6 +370,13 @@
                       text: 'Ingrese el extracto del producto',
                       type: 'error'
                   });
+              }else if(!this.producto.str_variedad){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: 'Ingrese el variedad del producto',
+                      type: 'error'
+                  });
               }else if(this.producto.portada == undefined){
                   this.$notify({
                       group: 'foo',
@@ -374,6 +397,7 @@
             fm.append('precio',this.producto.precio);
             fm.append('extracto',this.producto.extracto);
             fm.append('estado',this.producto.estado);
+            fm.append('str_variedad',this.producto.str_variedad);
             fm.append('descuento',this.producto.descuento);
             fm.append('portada',this.producto.portada); //IMAGEN
   
@@ -383,7 +407,22 @@
                     'Authorization' : this.$store.state.token
                 }
             }).then((result)=>{
-              console.log(result);
+                if(result.data.message){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: result.data.message,
+                      type: 'error'
+                  });
+                }else{
+                    this.$notify({
+                      group: 'foo',
+                      title: 'SUCCESS',
+                      text: 'Se registro el producto.',
+                      type: 'success'
+                  });
+                  this.$router.push({name: 'producto-index'});
+                }
             })
   
   
