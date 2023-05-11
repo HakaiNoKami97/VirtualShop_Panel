@@ -354,10 +354,17 @@
                                           <div class="col-auto">
   
                                               <!-- Button -->
-                                              <button class="btn btn-sm btn-danger">
+                                              <button v-if="item.stock == 0" class="btn btn-sm btn-danger" type="button" v-b-modal="'delete-'+item._id">
                                                   Eliminar
                                               </button>
   
+                                              <button v-if="item.stock >= 1" disabled class="btn btn-sm btn-danger" type="button">
+                                                  Eliminar
+                                              </button>
+  
+                                              <b-modal centered :id="'delete-'+item._id" title="BootstrapVue" title-html="<h4 class='card-header-title'><b>Add a member</b></h4>" @ok="eliminar(item._id)">
+                                                  <p class="my-4">{{item._id}}</p>
+                                              </b-modal>
                                           </div>
                                           </div> <!-- / .row -->
                                       </div>
@@ -605,6 +612,34 @@
                       text: 'Se agrego la nueva variedad.',
                       type: 'success'
                   }); */
+            });
+        },
+        eliminar(id){
+          axios.delete(this.$url+'/eliminar_variedad_producto/'+id,{
+                headers:{
+                     'Content-Type': 'application/json',
+                    'Authorization' : this.$store.state.token
+                }
+            }).then((result)=>{
+              
+              if(result.data.message){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: result.data.message,
+                      type: 'error'
+                  }); 
+              }else{
+                  this.$notify({
+                      group: 'foo',
+                      title: 'SUCCESS',
+                      text: 'Se eliminó la variedad.',
+                      type: 'success'
+                  });
+  
+                  this.init_variedades();
+              }
+                  
             });
         }
     },
