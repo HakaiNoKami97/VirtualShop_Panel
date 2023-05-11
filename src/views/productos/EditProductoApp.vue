@@ -324,81 +324,44 @@
   
                                       <!-- List group -->
                                       <div class="list-group list-group-flush my-n3">
-                                      <div class="list-group-item">
-                                          <div class="row align-items-center">
+                                     
+                                      <div class="list-group-item" v-for="item in variedades">
+                                          <div class="row align-i tems-center" >
                                           <div class="col">
   
                                               <!-- Heading -->
                                               <h4 class="mb-1">
-                                              Authenticator app
+                                                  {{item.variedad.toUpperCase()}}
                                               </h4>
   
                                               <!-- Text -->
                                               <small class="text-muted">
-                                              Google auth or 1Password
+                                                  <b>SKU:</b>  {{item.sku.toUpperCase()}}
                                               </small>
   
                                           </div>
-                                          <div class="col-auto">
-  
-                                              <!-- Button -->
-                                              <button class="btn btn-sm btn-white">
-                                              Setup
-                                              </button>
-  
-                                          </div>
-                                          </div> <!-- / .row -->
-                                      </div>
-                                      <div class="list-group-item">
-                                          <div class="row align-items-center">
                                           <div class="col">
-  
-                                              <!-- Heading -->
+                                               <!-- Heading -->
                                               <h4 class="mb-1">
-                                              SMS Recovery <i class="fe fe-info text-muted ms-1" data-bs-toggle="tooltip" data-title="We use the the phone number you provide in General" data-bs-original-title="" title=""></i>
+                                                  {{item.stock}}
                                               </h4>
   
                                               <!-- Text -->
                                               <small class="text-muted">
-                                              Standard messaging rates apply
+                                                  Unidades
                                               </small>
-  
                                           </div>
                                           <div class="col-auto">
   
                                               <!-- Button -->
                                               <button class="btn btn-sm btn-danger">
-                                              Disable
+                                                  Eliminar
                                               </button>
   
                                           </div>
                                           </div> <!-- / .row -->
                                       </div>
-                                      <div class="list-group-item">
-                                          <div class="row align-items-center">
-                                          <div class="col">
-  
-                                              <!-- Heading -->
-                                              <h4 class="mb-1">
-                                              Recovery codes <i class="fe fe-info text-muted ms-1" data-bs-toggle="tooltip" data-title="We use the the phone number you provide in General" data-bs-original-title="" title=""></i>
-                                              </h4>
-  
-                                              <!-- Text -->
-                                              <small class="text-muted">
-                                              Standard messaging rates apply
-                                              </small>
-  
-                                          </div>
-                                          <div class="col-auto">
-  
-                                              <!-- Button -->
-                                              <button class="btn btn-sm btn-white">
-                                              Reveal
-                                              </button>
-  
-                                          </div>
-                                          </div> <!-- / .row -->
-                                      </div>
+                                  
                                       </div>
   
                                   </div>
@@ -443,7 +406,8 @@
             },
             portada : undefined,
             variedad: {},
-            sku: ''
+            sku: '',
+            variedades : [],
         }
     },
     methods: {
@@ -610,17 +574,43 @@
                     'Authorization' : this.$store.state.token
                 }
             }).then((result)=>{
-                console.log(result);
+                this.variedad = {};
+                this.$notify({
+                      group: 'foo',
+                      title: 'SUCCESS',
+                      text: 'Se agrego la nueva variedad.',
+                      type: 'success'
+                  });
+                  this.init_variedades();
             });
         },  
         generar_sku(){
           let sku = this.producto.titulo.substr(0,3)+''+this.producto.str_variedad.substr(0,3)+''+this.variedad.variedad.substr(0,3)+''+this.variedad.proveedor.substr(0,3);
           return sku.toUpperCase();
           //XIACOLROJREA
+        },
+  
+        init_variedades(){
+            axios.get(this.$url+'/obtener_variedades_producto/'+this.$route.params.id,{
+                headers:{
+                     'Content-Type': 'application/json',
+                    'Authorization' : this.$store.state.token
+                }
+            }).then((result)=>{
+                this.variedades = result.data;
+                /* this.variedad = {};
+                this.$notify({
+                      group: 'foo',
+                      title: 'SUCCESS',
+                      text: 'Se agrego la nueva variedad.',
+                      type: 'success'
+                  }); */
+            });
         }
     },
     beforeMount() {
         this.init_data();
+        this.init_variedades();
     },
   }
   </script>
