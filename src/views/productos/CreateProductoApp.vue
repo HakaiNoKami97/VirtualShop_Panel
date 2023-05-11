@@ -318,7 +318,7 @@
                   image = $event.target.files[0];
               }
   
-              if(image.size <= 100000){
+              if(image.size <= 1000000){
                  if(image.type == 'image/jpeg'||image.type == 'image/png'||image.type == 'image/webp'||image.type == 'image/jpg'){
                      this.str_image = URL.createObjectURL(image);
                       this.portada = image;
@@ -330,6 +330,7 @@
                       text: 'El recurso debe ser imagen.',
                       type: 'error'
                   });
+                  this.portada = undefined;
                  }
               }else{
                   this.$notify({
@@ -338,6 +339,7 @@
                       text: 'La imagen debe pesar menos de 1MB',
                       type: 'error'
                   });
+                  this.portada = undefined;
               }
             
         },
