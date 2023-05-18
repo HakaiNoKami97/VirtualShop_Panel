@@ -245,8 +245,8 @@
                                           <th></th>
                                           </tr>
                                       </thead>
-                                      <tbody class="fs-base">
-                                          <tr v-for="item in detalles">
+                                      <tbody class="fs-base" v-if="detalles.length >= 1">
+                                          <tr v-for="(item,index) in detalles">
                                               <td>
                                                   <a href="invoice.html">{{item.titulo_producto}}</a>
                                               </td>
@@ -261,16 +261,29 @@
                                                   <!--  -->
                                               </td>
                                               <td>
-                                                  <button class="btn btn-danger btn-sm">Quitar</button>
+                                                  <button class="btn btn-danger btn-sm" v-on:click="quitarDetalle(index,item.precio_unidad*item.cantidad)">Quitar</button>
                                               </td>
                                           </tr>
                                           
                                       </tbody>
+                                      <tbody  class="fs-base" v-if="detalles.length == 0">
+                                          <tr>
+                                              <td class="text-center" colspan="5">
+                                                  <span class="text-muted">No hay detalles en el ingreso</span>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                      <tfoot>
+                                          <tr>
+                                              <td colspan="4">Total</td>
+                                              <td>{{convertCurrency(total)}}</td>
+                                          </tr>
+                                      </tfoot>
                                   </table>
                               </div>
                               </div>
   
-                              <button class="btn btn-primary mb-7">
+                              <button class="btn btn-primary mb-7" v-on:click="registro_ingreso()">
                               Ingresar datos
                               </button>
                           
@@ -311,6 +324,7 @@
             producto: {},
             productos: [],
             variedades: [],
+            total: 0
         }
     },
     methods: {
@@ -333,6 +347,7 @@
                           text: 'El recurso debe ser imagen.',
                           type: 'error'
                       });
+                      this.ingreso.documento = undefined;
                       this.comprobante = undefined;
                  }
               }else{
@@ -342,6 +357,7 @@
                       text: 'La imagen debe pesar menos de 1MB',
                       type: 'error'
                   });
+                   this.ingreso.documento = undefined;
                   this.comprobante = undefined;
               }
               console.log(this.comprobante);
@@ -414,7 +430,12 @@
                       type: 'error'
                   });
             }else{
+  
                   this.detalles.push(this.detalle);
+  
+                  let subtotal = this.detalle.precio_unidad * this.detalle.cantidad;
+                  this.total = this.total + subtotal;
+  
                   this.detalle = {
                       variedad: ''
                   }
@@ -424,6 +445,71 @@
         },
         convertCurrency(number){
             return currency_formatter.format(number, { code: 'USD' });
+        },
+        quitarDetalle(idx,subtotal){
+            this.detalles.splice(idx,1);
+            this.total = this.total - subtotal;
+        },
+        registro_ingreso(){
+              if(!this.ingreso.proveedor){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: 'Seleccione el proveedor',
+                      type: 'error'
+                  });
+              }else if(!this.ingreso.ncomprobante){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: 'Ingrese el número de comprobante',
+                      type: 'error'
+                  });
+              }else if(!this.ingreso.monto_total){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: 'Ingrese el monto total',
+                      type: 'error'
+                  });
+              }else if(!this.ingreso.documento){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: 'Suba el comprobante de ingreso',
+                      type: 'error'
+                  });
+              }else{
+                  console.log(this.ingreso);
+                  console.log(this.detalles);
+  
+                  var fm = new FormData();
+                  fm.append('proveedor',this.ingreso.proveedor);
+                  fm.append('ncomprobante',this.ingreso.ncomprobante);
+                  fm.append('monto_total',this.ingreso.monto_total);
+                  fm.append('monto_resultante',this.total);
+                  fm.append('documento',this.ingreso.documento);
+                  fm.append('detalles',JSON.stringify(this.detalles));
+  
+                  axios.post(this.$url+'/registro_ingreso_admin',fm,{
+                      headers: {
+                          'Content-Type': 'multipart/form-data',
+                          'Authorization' : this.$store.state.token
+                      }
+                  }).then((result)=>{
+                      if(result.data.message){
+                          this.$notify({
+                              group: 'foo',
+                              title: 'ERROR',
+                              text: result.data.message,
+                              type: 'error'
+                          });
+                      }else{
+                          console.log(result);
+                      }
+                     
+                  })
+              }
         }
     },
     beforeMount() {
