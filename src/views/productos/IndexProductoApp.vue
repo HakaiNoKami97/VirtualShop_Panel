@@ -140,6 +140,9 @@
                                                                   <router-link :to="{name: 'producto-edit', params:{id:item._id}}" class="dropdown-item">
                                                                     Editar Producto
                                                                   </router-link>
+                                                                  <router-link :to="{name: 'producto-galeria', params:{id:item._id}}" class="dropdown-item">
+                                                                    Galeria
+                                                                  </router-link>
                                                               </div>
                                                               </div>
   
