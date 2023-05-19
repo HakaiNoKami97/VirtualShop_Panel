@@ -9,6 +9,7 @@ import { ModalPlugin } from 'bootstrap-vue'
 
 Vue.config.productionTip = false
 Vue.prototype.$url = 'http://localhost:4201/api';
+Vue.prototype.$ganancia = 30;
 Vue.prototype.$token = localStorage.getItem('token');
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue-search-select/dist/VueSearchSelect.css'

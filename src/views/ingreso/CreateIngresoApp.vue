@@ -485,6 +485,7 @@
   
                   var fm = new FormData();
                   fm.append('proveedor',this.ingreso.proveedor);
+                  fm.append('ganancia',this.$ganancia);
                   fm.append('ncomprobante',this.ingreso.ncomprobante);
                   fm.append('monto_total',this.ingreso.monto_total);
                   fm.append('monto_resultante',this.total);
