@@ -93,11 +93,11 @@
                                           
                                       </div> <!-- / .row -->
   
-                                      <div class="row listAlias">
-                                          <div class="col-12 col-md-6 col-xl-4">
+                                      <div class="row listAlias" v-if="!load_galeria">
+                                          <div class="col-12 col-md-6 col-xl-4" v-for="item in galeria">
                                               <div class="card">
                                                   <a href="project-overview.html">
-                                                      <img src="https://dashkit.goodthemes.co/assets/img/avatars/projects/project-1.jpg" alt="..." class="card-img-top">
+                                                      <img :src="$url+'/obtener_galeria_producto/'+item.imagen" alt="..." class="card-img-top">
                                                   </a>
                                                   <div class="card-footer card-footer-boxed">
                                                   <div class="row">
@@ -110,6 +110,12 @@
                                               </div>
                                           </div>
                                           
+                                      </div>
+  
+                                      <div class="row mt-5" v-if="load_galeria">
+                                          <div class="col-12 text-center">
+                                              <img src="/assets/img/reloj.gif" alt="" style="width:80px">
+                                          </div>
                                       </div>
   
                                   </div>
@@ -154,6 +160,8 @@
             str_image: '',
             data: false,
             load_data: true,
+            load_galeria: true,
+            galeria : [],
         }
     },
   
@@ -254,10 +262,24 @@
            }
   
   
+        },
+        init_galeria(){
+            this.load_galeria = true;
+            axios.get(this.$url+'/obtener_galeria_producto_admin/'+this.$route.params.id,{
+                headers:{
+                     'Content-Type': 'application/json',
+                      'Authorization': this.$store.state.token,
+                }
+            }).then((result)=>{
+                this.galeria = result.data;
+                this.load_galeria = false;
+               
+            });
         }
     },
     beforeMount() {
         this.init_data();
+          this.init_galeria();
     },
   }
   </script>
