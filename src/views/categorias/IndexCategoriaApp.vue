@@ -82,16 +82,22 @@
                                                   <a href="#!" class="btn btn-sm btn-danger text-white" style="margin-right: 1rem;">
                                                       Quitar
                                                   </a>
-                                                  <a href="#!" class="btn btn-sm btn-dark text-white">
+                                                  <button v-on:click="openInputGroup(item._id)" class="btn btn-sm btn-dark text-white">
                                                       Subcategoria
-                                                  </a>
+                                                  </button>
   
                                               </div>
                                           </div>
+  
+                                          <div class="input-group mt-4 hide_input content_group" :id="'content_'+item._id">
+                                              <input type="text" class="form-control" placeholder="Nueva categoria" v-model="nueva_subcategoria">
+                                              <button class="btn btn-dark" v-on:click="crear_subcategoria()">Crear subcategoría</button>
+                                          </div>
+  
                                           <!-- / .row -->
                                           <div class="row mb-3">
                                               <div class="col-12">
-                                                  <ul class="list-group mt-4">
+                                                  <ul class="list-group mt-3">
                                                       
                                                       <li class="list-group-item d-flex justify-content-between align-items-center" style="font-size: .8rem;padding: 0.5rem 1.5rem;">
                                                           Morbi leo risus 
@@ -131,12 +137,22 @@
       </div>
   </template>
   
+  <style>
+  .hide_input{
+      display: none;
+  }
+  .show_input{
+      display: block;
+  }
+  </style>
+  
   <script>
   // @ is an alias to /src
   
   import Sidebar from '@/components/Sidebar.vue';
   import TopNav from '@/components/TopNav.vue';
   import axios from 'axios';
+  import $ from 'jquery';
   
   export default {
     name: 'IndexCategoriaApp',
@@ -144,6 +160,8 @@
       return {
           section_form: false,
           nueva_categoria: '',
+          nueva_subcategoria: '',
+          idcategoria: '',
           categorias: []
       }
     },
@@ -183,6 +201,45 @@
               }
           }).then((result)=>{
               this.categorias = result.data;
+          });
+      },
+      openInputGroup(id){
+          setTimeout(() => {
+              this.idcategoria = id;
+              this.nueva_subcategoria = '';
+              $('.content_group').addClass('hide_input');
+              $('#content_'+id).removeClass('hide_input'); 
+          }, 50);
+      },
+      crear_subcategoria(){
+          axios.post(this.$url+'/crear_subcategoria_admin',
+          {
+              titulo: this.nueva_subcategoria,
+              categoria: this.idcategoria
+          }
+          ,{
+              headers:{
+                  'Content-Type': 'application/json',
+                  'Authorization': this.$store.state.token,
+              }
+          }).then((result)=>{
+              if(result.data.message){
+                  this.$notify({
+                      group: 'foo',
+                      title: 'ERROR',
+                      text: result.data.message,
+                      type: 'error'
+                  });
+              }else{
+                  this.nueva_subcategoria = '';
+                  this.$notify({
+                      group: 'foo',
+                      title: 'SUCCESS',
+                      text: 'Se registró la subcategoria.',
+                      type: 'success'
+                  });
+              }
+        
           });
       }
     },
