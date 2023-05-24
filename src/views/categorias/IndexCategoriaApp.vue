@@ -76,17 +76,26 @@
                                                   <p class="small mb-0" v-if="!item.categoria.estado">
                                                       <span class="text-danger">●</span> Oculto
                                                   </p>
+                                                  
   
                                               </div>
                                               <div class="col-auto">
   
                                                   <!-- Button -->
-                                                  <a href="#!" class="btn btn-sm btn-danger text-white" style="margin-right: 1rem;">
-                                                      Quitar
+                                                  <a v-b-modal="'estado-'+item.categoria._id" v-if="item.categoria.estado" class="btn btn-sm btn-danger text-white" style="margin-right: 1rem;">
+                                                      Ocultar
                                                   </a>
+                                                  <a v-b-modal="'estado-'+item.categoria._id" v-if="!item.categoria.estado" class="btn btn-sm btn-primary text-white" style="margin-right: 1rem;">
+                                                      Mostrar
+                                                  </a>
+                                                  
                                                   <button v-on:click="openInputGroup(item.categoria._id)" class="btn btn-sm btn-dark text-white">
                                                       Subcategoria
                                                   </button>
+  
+                                                  <b-modal centered :id="'estado-'+item.categoria._id" title="BootstrapVue" title-html="<h4 class='card-header-title'><b>Add a member</b></h4>" @ok="cambiar_estado(item.categoria._id,item.categoria.estado)">
+                                                      <p class="my-4">{{item.categoria._id}}</p>
+                                                  </b-modal>
   
                                               </div>
                                           </div>
@@ -161,31 +170,40 @@
     },
     methods: {
       crear_categoria(){
-          console.log(this.nueva_categoria);
-          axios.post(this.$url+'/crear_categoria_admin',{titulo: this.nueva_categoria},{
-              headers:{
-                  'Content-Type': 'application/json',
-                  'Authorization': this.$store.state.token,
-              }
-          }).then((result)=>{
-              if(result.data.message){
-                  this.$notify({
-                      group: 'foo',
-                      title: 'ERROR',
-                      text: result.data.message,
-                      type: 'error'
-                  });
-              }else{
-                  this.nueva_categoria = '';
-                  this.$notify({
-                      group: 'foo',
-                      title: 'SUCCESS',
-                      text: 'Se registró la categoria.',
-                      type: 'success'
-                  });
-              }
-        
-          });
+          if(this.nueva_categoria){
+              console.log(this.nueva_categoria);
+              axios.post(this.$url+'/crear_categoria_admin',{titulo: this.nueva_categoria},{
+                  headers:{
+                      'Content-Type': 'application/json',
+                      'Authorization': this.$store.state.token,
+                  }
+              }).then((result)=>{
+                  if(result.data.message){
+                      this.$notify({
+                          group: 'foo',
+                          title: 'ERROR',
+                          text: result.data.message,
+                          type: 'error'
+                      });
+                  }else{
+                      this.nueva_categoria = '';
+                      this.$notify({
+                          group: 'foo',
+                          title: 'SUCCESS',
+                          text: 'Se registró la categoria.',
+                          type: 'success'
+                      });
+                  }
+          
+              });
+          }else{
+              this.$notify({
+                  group: 'foo',
+                  title: 'ERROR',
+                  text: 'Ingrese el titulo de la categoria',
+                  type: 'error'
+              });
+          }
       },
       init_data(){
           axios.get(this.$url+'/listar_categorias_admin',{
@@ -207,36 +225,45 @@
           }, 50);
       },
       crear_subcategoria(){
-          axios.post(this.$url+'/crear_subcategoria_admin',
-          {
-              titulo: this.nueva_subcategoria,
-              categoria: this.idcategoria
+          if(this.nueva_subcategoria){
+              axios.post(this.$url+'/crear_subcategoria_admin',
+              {
+                  titulo: this.nueva_subcategoria,
+                  categoria: this.idcategoria
+              }
+              ,{
+                  headers:{
+                      'Content-Type': 'application/json',
+                      'Authorization': this.$store.state.token,
+                  }
+              }).then((result)=>{
+                  if(result.data.message){
+                      this.$notify({
+                          group: 'foo',
+                          title: 'ERROR',
+                          text: result.data.message,
+                          type: 'error'
+                      });
+                  }else{
+                      this.nueva_subcategoria = '';
+                      this.$notify({
+                          group: 'foo',
+                          title: 'SUCCESS',
+                          text: 'Se registró la subcategoria.',
+                          type: 'success'
+                      });
+                      this.init_data();
+                  }
+          
+              });
+          }else{
+               this.$notify({
+                  group: 'foo',
+                  title: 'ERROR',
+                  text: 'Ingrese el titulo de la subcategoria',
+                  type: 'error'
+              });
           }
-          ,{
-              headers:{
-                  'Content-Type': 'application/json',
-                  'Authorization': this.$store.state.token,
-              }
-          }).then((result)=>{
-              if(result.data.message){
-                  this.$notify({
-                      group: 'foo',
-                      title: 'ERROR',
-                      text: result.data.message,
-                      type: 'error'
-                  });
-              }else{
-                  this.nueva_subcategoria = '';
-                  this.$notify({
-                      group: 'foo',
-                      title: 'SUCCESS',
-                      text: 'Se registró la subcategoria.',
-                      type: 'success'
-                  });
-                  this.init_data();
-              }
-        
-          });
       },
       eliminar_subcategoria(id){
            axios.delete(this.$url+'/eliminar_subcategoria_admin/'+id,{
@@ -250,6 +277,23 @@
                   group: 'foo',
                   title: 'SUCCESS',
                   text: 'Se eliminó la subcategoria',
+                  type: 'success'
+              });
+  
+          });
+      },
+      cambiar_estado(id,estado){
+          axios.put(this.$url+'/cambiar_estado_producto_admin/'+id,{estado: estado},{
+              headers:{
+              'Content-Type': 'application/json',
+              'Authorization': this.$token
+              }
+          }).then((result )=>{
+              this.init_data();
+              this.$notify({
+                  group: 'foo',
+                  title: 'SUCCESS',
+                  text: 'Se cambio el estado de la categoria',
                   type: 'success'
               });
   
