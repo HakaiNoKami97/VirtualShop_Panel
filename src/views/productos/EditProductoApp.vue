@@ -116,53 +116,42 @@
   
                                   <div class="col-12 col-md-6">
   
-                                  <!-- First name -->
-                                  <div class="form-group">
-  
-                                      <!-- Label -->
-                                      <label class="form-label">
-                                      Categoria
-                                      </label>
-  
-                                       <!-- Form text -->
-                                      <small class="form-text text-muted">
-                                      This contact will be shown to others publicly, so choose it carefully.
-                                      </small>
-  
-                                      <!-- Input -->
-                                      <select name="" class="form-select" v-model="producto.categoria">
-                                          <option value="" disabled selected>Seleccionar</option>
-                                          <option :value="item" v-for="item in $categorias">{{item}}</option>
-                                      </select>
-  
-                                  </div>
-  
-                                  </div>
-  
-                                  <div class="col-12 col-md-6">
-  
-                                  <!-- First name -->
-                                  <div class="form-group">
-  
-                                      <!-- Label -->
-                                      <label class="form-label">
-                                      Subcategoria
-                                      </label>
-  
-                                       <!-- Form text -->
-                                      <small class="form-text text-muted">
-                                      This contact will be shown to others publicly, so choose it carefully.
-                                      </small>
-  
-                                      <!-- Input -->
-                                      <select name="" class="form-select" v-model="producto.subcategoria">
-                                          <option value="" disabled selected>Seleccionar</option>
-                                          <option :value="item" v-for="item in subcategorias">{{item}}</option>
-                                      </select>
-  
-                                  </div>
-  
-                                  </div>
+                                    <!-- First name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                        Categoria
+                                        </label>
+
+                                        <!-- Input -->
+                                        <select name="" class="form-select" v-model="producto.categoria" v-on:change="getSubcategorias($event)">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option :value="item.categoria.titulo" v-for="item in categorias">{{item.categoria.titulo}}</option>
+                                        </select>
+
+                                    </div>
+
+                                    </div>
+                                    <div class="col-12 col-md-6">
+
+                                    <!-- First name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                        Subcategoria
+                                        </label>
+
+                                        <!-- Input -->
+                                        <select name="" class="form-select" v-model="producto.subcategoria">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option :value="item.titulo" v-for="item in subcategorias">{{item.titulo}}</option>
+                                        </select>
+
+                                    </div>
+
+                                    </div>
   
                                   <div class="col-12 col-md-6">
   
@@ -446,7 +435,8 @@
             variedad: {},
             sku: '',
             variedades : [],
-            subcategorias: ['Hombres','Mujeres','Accesorios'],
+            categorias: [],
+            subcategorias: [],
         }
     },
     methods: {
@@ -682,10 +672,30 @@
               }
                   
             });
+        },
+        init_categorias(){
+          axios.get(this.$url+'/listar_categorias_admin',{
+              headers:{
+                  'Content-Type': 'application/json',
+                  'Authorization': this.$store.state.token,
+              }
+          }).then((result)=>{
+              this.categorias = result.data;
+              this.subcategorias = this.categorias.filter(item=>item.categoria.titulo == this.producto.categoria)[0].subcategorias;
+          });
+        },
+        getSubcategorias(event){
+            /*for(var item of this.categorias){
+                if(item.categoria.titulo == event.target.value){
+                    this.subcategorias = item.subcategorias;
+                }
+            }*/
+            this.subcategorias = this.categorias.filter(item=>item.categoria.titulo == event.target.value)[0].subcategorias;
         }
     },
     beforeMount() {
         this.init_data();
+        this.init_categorias();
         this.init_variedades();
     },
   }
