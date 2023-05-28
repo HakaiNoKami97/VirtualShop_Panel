@@ -46,7 +46,7 @@
 
                                 <!-- Title -->
                                 <h4 class="card-header-title mb-0">
-                                    <b>Ingreso a inventario</b>
+                                    <b>Ventas realizadas</b>
                                 </h4>
 
                             </div>
@@ -54,28 +54,26 @@
                                 <table class="table table-sm table-nowrap card-table">
                                 <thead>
                                     <tr>
-                                        <th>Proveedor</th>
+                                        <th>Cliente</th>
                                         <th>Serie</th>
                                         <th>Monto</th>
-                                        <th>Documento</th>
+                                        <th>Estado</th>
                                         <th>*</th>
                                     </tr>
                                 </thead>
                                 <tbody class="fs-base" v-if="ventas.length >= 1">
                                     <tr v-for="item in ventas">
                                         <td>
-                                            <a>{{item.proveedor}}</a>
+                                            <a>{{item.cliente.nombres}}</a>
                                         </td>
                                         <td>
                                             <a>#{{item.serie.toString().padStart(6,'000000')}}</a>
                                         </td>
                                         <td>
-                                            {{convertCurrency(item.monto_resultante)}}
+                                            {{convertCurrency(item.total+item.envio)}}
                                         </td>
                                         <td>
-                                            <a :href="$url+'/obtener_comprobante_ingreso/'+item.documento" target="_blank">
-                                                <span class="badge bg-success">Abrir documento</span>
-                                            </a>
+                                            {{item.estado}}
                                         </td>
                                         <td>
                                             <button class="btn btn-primary btn-sm">
@@ -136,10 +134,12 @@
 <script>
 
 import Sidebar from '@/components/Sidebar.vue'
-import Topnav from '@/components/TopNav.vue'
+import TopNav from '@/components/TopNav.vue'
+import axios from 'axios'
+import currency_formatter from 'currency-formatter';
 
 export default {
-    name: 'VentaIndexApp',
+    name: 'VentasIndexApp',
     data() {
         return {
             inicio: '',
@@ -147,14 +147,41 @@ export default {
             ventas: []
         }
     },
+
     methods:{
         init_data(){
-
-        }
+            if(!this.inicio){
+                this.$notify({
+                    group: 'foo',
+                    title: 'ERROR',
+                    text: 'Ingrese la fecha de inicio',
+                    type: 'error'
+                });
+            }else if(!this.hasta){
+                this.$notify({
+                    group: 'foo',
+                    title: 'ERROR',
+                    text: 'Ingrese la segunda fecha',
+                    type: 'error'
+                });
+            }else{
+                axios.get(this.$url+'/obtener_ventas_admin/'+this.inicio+'/'+this.hasta,{
+                    headers:{
+                            'Content-Type': 'application/json',
+                            'Authorization': this.$store.state.token,
+                    }
+                }).then((result)=>{
+                    this.ventas = result.data;
+                });
+            }
+        },
+          convertCurrency(number){
+          return currency_formatter.format(number, { code: 'USD' });
+      }
     },  
     components: {
         Sidebar,
-        Topnav
+        TopNav
     }
 }
 </script>
