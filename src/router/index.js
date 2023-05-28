@@ -25,6 +25,7 @@ const routes = [
 {path: '/ingreso/create',name: 'ingreso-create',component: ()=> import('@/views/ingreso/CreateIngresoApp.vue'),meta: { requiresAuth: true }},
 {path: '/ingreso',name: 'ingreso-index',component: ()=> import('@/views/ingreso/IndexIngresoApp.vue'),meta: { requiresAuth: true }},
 {path: '/ingreso/:id',name: 'ingreso-detalle',component: ()=> import('@/views/ingreso/DetalleIngresoApp.vue'),meta: { requiresAuth: true }},
+{path: '/ventas',name: 'ventas-index',component: ()=> import('@/views/ventas/VentasIndexApp.vue'),meta: { requiresAuth: true }},
 {path: '/categorias',name: 'categorias',component: ()=> import('@/views/categorias/IndexCategoriaApp.vue'),meta: { requiresAuth: true }},
 ]
 

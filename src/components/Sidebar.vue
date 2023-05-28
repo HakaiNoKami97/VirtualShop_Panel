@@ -106,6 +106,11 @@
                 <i class="fe fe-folder"></i> Ingreso
               </router-link>
             </li>
+            <li class="nav-item">
+              <router-link to="/ventas" class="nav-link" active-class="active">
+                <i class="fe fe-shopping-bag"></i> Ventas
+              </router-link>
+            </li>
         </ul>
   
   
