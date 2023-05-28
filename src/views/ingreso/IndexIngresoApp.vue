@@ -77,6 +77,7 @@
                                         <th>Serie</th>
                                         <th>Monto</th>
                                         <th>Documento</th>
+                                        <th>*</th>
                                     </tr>
                                 </thead>
                                 <tbody class="fs-base" v-if="ingresos.length >= 1">
@@ -94,6 +95,11 @@
                                             <a :href="$url+'/obtener_comprobante_ingreso/'+item.documento" target="_blank">
                                                 <span class="badge bg-success">Abrir documento</span>
                                             </a>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">
+                                                <router-link style="color: #ffffff !important;" :to="{name: 'ingreso-detalle', params: {id:item._id}}">Ver detalles</router-link>
+                                            </button>
                                         </td>
                                     </tr>
                                     
